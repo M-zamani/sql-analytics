@@ -34,3 +34,25 @@ Insights from this analysis help stakeholders:
 Mahmoud Zamani  
 Data Analyst | SQL | Power BI | Python  
 Toronto, Canada
+## 🗣️ Interview Talking Points (2–3 minutes)
+
+**Problem:** The business wants to understand revenue performance and customer retention behavior.
+
+**Approach:**
+1. Calculated monthly revenue and active customers to see overall performance trends.
+2. Identified top customers by revenue and order count to highlight high-value segments.
+3. Measured monthly active customers as a retention proxy (customers with at least one order per month).
+4. Built cohort revenue analysis to compare how different signup cohorts perform over time.
+5. Added MoM growth to quantify changes and support performance reporting.
+
+**Key Insights I would look for:**
+- Seasonality or declines in monthly revenue
+- Dependence on a small group of high-value customers
+- Retention trends: stable vs decreasing monthly active customers
+- Strong vs weak cohorts (which cohorts sustain revenue longer)
+
+**Next Steps (if this were a real company):**
+- Segment by country/product/channel (if available) to find drivers
+- Identify churn-risk customers (no orders in last X days)
+- Build a Power BI dashboard to track KPIs monthly
+
