@@ -1,86 +1,97 @@
-# SQL Analytics Projects
+# SQL Analytics Projects (PostgreSQL)
 
-This repository showcases real-world SQL analytics projects focused on extracting actionable business insights from relational data.  
-The analyses are designed to reflect common business problems and interview-style analytics tasks.
+## Project: Customer Revenue & Retention Analysis
 
----
-
-## 🔧 Tools & Skills
-- PostgreSQL
-- Advanced SQL (CTEs, Window Functions, Joins)
-- Data Analysis & Business Insight Generation
+**Goal:** Identify top customers, revenue drivers, and retention trends to support growth decisions.  
+**Tech:** PostgreSQL • CTEs • Window Functions • Joins • Cohort/Retention Logic
 
 ---
 
-## 📊 Project: Customer Revenue & Retention Analysis
+## What’s inside
 
-### Objective
-Analyze customer purchasing behavior, revenue trends, and retention patterns to support data-driven business decisions.
-
----
-
-### Key SQL Concepts Used
-- Multi-table joins
-- Aggregations & GROUP BY
-- Common Table Expressions (CTEs)
-- Window functions (ROW_NUMBER, RANK, LAG)
+- `schema.sql` — tables + constraints
+- `sample_data.sql` — small, realistic dataset to run locally
+- `customer_revenue_retention.sql` — analysis queries (step-by-step) + final outputs
 
 ---
 
-### Business Questions Answered
-- How does revenue change month over month?
-- Who are the top revenue-generating customers?
-- How many customers are active each month (retention proxy)?
-- How does revenue performance vary by customer signup cohort?
+## Data model (schema)
+
+**customers**
+- `customer_id` (PK)
+- `full_name`
+- `email` (unique)
+- `segment` (SMB / Mid-Market / Enterprise)
+- `country`
+- `created_at`
+
+**products**
+- `product_id` (PK)
+- `product_name`
+- `category`
+- `unit_price`
+
+**orders**
+- `order_id` (PK)
+- `customer_id` (FK)
+- `order_date`
+- `order_status` (completed / returned / cancelled)
+- `channel` (web / mobile / partner)
+
+**order_items**
+- `order_item_id` (PK)
+- `order_id` (FK)
+- `product_id` (FK)
+- `quantity`
+- `unit_price` (captured at purchase time)
 
 ---
 
-## 📈 Business Value
-Insights from this analysis help stakeholders:
-- Identify and prioritize high-value customers
-- Monitor revenue growth and seasonality
-- Evaluate customer retention trends
-- Compare long-term performance of different customer cohorts
+## How to run (PostgreSQL)
+
+1) Create a database (example):
+```sql
+CREATE DATABASE analytics_portfolio;
+```
+
+2) Connect to the DB and run:
+```sql
+\i schema.sql
+\i sample_data.sql
+\i customer_revenue_retention.sql
+```
 
 ---
 
-## ▶️ How to Run This Project
+## Key outputs (what recruiters can scan)
 
-1. Use **PostgreSQL** or any SQL editor that supports window functions.
-2. Run `schema_and_sample_data.sql` to create tables and load sample data.
-3. Run `customer_revenue_retention.sql` to execute the analysis queries.
-4. Review query outputs to interpret revenue, retention, and cohort insights.
-
-> Note: Sample data is intentionally small and simplified to focus on SQL logic and analytical thinking.
-
----
-
-## 🗣️ Interview Talking Points (2–3 Minutes)
-
-**Problem**  
-The business wants to understand overall revenue performance and customer retention behavior.
-
-**Approach**
-1. Calculated monthly revenue and active customers to assess overall trends.
-2. Identified top customers by revenue and order frequency to highlight high-value segments.
-3. Used monthly active customers as a simple retention proxy.
-4. Built a cohort analysis to compare revenue performance by signup month.
-5. Calculated month-over-month revenue growth using window functions.
-
-**Insights I Would Look For**
-- Revenue seasonality or declining trends
-- Revenue concentration among a small group of customers
-- Retention stability or drop-off over time
-- Strong vs weak customer cohorts
-
-**Next Steps (If This Were a Real Company)**
-- Segment results by country, product, or channel
-- Identify churn-risk customers based on inactivity
-- Build a Power BI dashboard to monitor KPIs over time
+- **Top customers by revenue** (Top 20)
+- **Revenue by segment** (SMB / Mid-Market / Enterprise)
+- **Monthly retention rate (%)**
+- **Cohort retention** (cohort month → retained customers by month index)
+- **Data quality checks** (nulls/duplicates, revenue reconciliation)
 
 ---
 
-## 📌 Author
-**Mahmoud Zamani**  
-Data Analyst | SQL | Power BI | Python  
-Toronto, Canada
+## Assumptions (explicit on purpose)
+
+- **Revenue** includes only `order_status = 'completed'`
+- **Monthly retention**: a customer is “retained” in month *M* if they also purchased in month *M-1*
+- Timestamps are stored as UTC dates for simplicity
+
+---
+
+## Indexing (performance notes)
+
+If this were large-scale, recommended indexes:
+- `orders (customer_id, order_date)`
+- `order_items (order_id)`
+- `order_items (product_id)`
+- `customers (segment)`
+
+---
+
+## Next upgrades (optional)
+
+- Add an RFM segmentation project (Recency/Frequency/Monetary)
+- Add cohort heatmap export (to CSV) for visualization in Power BI/Tableau
